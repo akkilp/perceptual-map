@@ -10,6 +10,8 @@ const { connectToDatabase } = require("./src/util/db")
 // Routes
 const signinRouter = require('./src/routes/signin')
 const loginRouter = require('./src/routes/login')
+const userRouter = require('./src/routes/users')
+
 
 
 const app = express()
@@ -19,6 +21,8 @@ app.use(expressLogging(logger));
 
 app.use("/api/signin", signinRouter)
 app.use("/api/login", loginRouter)
+app.use("/api/users", userRouter)
+
 
 // Serve frontend
 app.use(express.static('public'))
