@@ -3,6 +3,15 @@ import { Button, Typography, Box, Container, TextField } from '@mui/material';
 
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import signinAdmin from '../api_calls/signinAdmin';
+
+import { useContext, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
+
+import { MessageContext } from '../components/MessageService';
+import { AuthenticationContext } from '../components/AuthenticationService';
+
 
 const validationSchema = yup.object({
     email: yup
@@ -23,28 +32,44 @@ const validationSchema = yup.object({
   });
 
 function AdminSignin() {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      username: '',
+      secret:''
+    },
+    validationSchema: validationSchema,
+    onSubmit: (credentials) => handleSignIn(credentials)
+  });
 
-    const formik = useFormik({
-        initialValues: {
-          email: '',
-          password: '',
-          username: '',
-          secret: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-          alert(JSON.stringify(values, null, 2));
-        },
-      });
+  const [loading, setLoading] = useState(false);
 
+  const { setMessage } = useContext(MessageContext);
+  const { setUser } = useContext(AuthenticationContext);
 
+  const navigate = useNavigate()
+
+  const handleSignIn = async (payload) => {
+    setLoading(true)
+    const response = await signinAdmin(payload)
+    setLoading(false)
+    setMessage(response)
+    if (response.success === true) {
+      console.log("Response to api succeeded:", response)
+      setUser(response.data)
+      navigate('/')
+    } else {
+      console.log("Response to api failed:", response)
+    }
+  }
 
   return (
     <Container maxWidth="sm">
         <Box sx={{ display: "flex", flexDirection: "column", paddingTop: "100px" }}>
-                <Typography variant="h3" >
-                    Sign in as admin
-                </Typography>
+            <Typography variant="h3" sx={{paddingBottom: '1rem'}}>
+              Sign in as admin
+            </Typography>
             <form onSubmit={formik.handleSubmit}>
                 <TextField 
                         id="username"
@@ -81,7 +106,7 @@ function AdminSignin() {
                     fullWidth 
                     variant="outlined" 
                     sx={{marginBottom: 2}}
-                />      
+                />     
                 <TextField 
                     id="secret"
                     name="secret"
@@ -94,7 +119,14 @@ function AdminSignin() {
                     variant="outlined" 
                     sx={{marginBottom: 2}}
                 />                            
-                <Button variant="contained" size="large" type="submit">AdminSignin</Button>
+                <Button 
+                  variant="contained" 
+                  size="large" 
+                  type="submit"
+                  disabled={loading}
+                >
+                  Sign in
+                </Button>  
             </form>
         </Box>
     </Container>
