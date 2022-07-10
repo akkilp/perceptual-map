@@ -41,4 +41,4 @@ const connectToDatabase = async () => {
   return null
 }
 
-module.exports = { connectToDatabase, sequelize }
+module.exports = { connectToDatabase, sequelize}

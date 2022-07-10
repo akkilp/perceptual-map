@@ -19,9 +19,9 @@ router.post(
     async (req, res) => {
 
     const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
-        }
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}` });
+    }
     const { username, email, password } = req.body
 
     const userExists = await User.findOne({ 
@@ -33,11 +33,10 @@ router.post(
         }
     })
 
-
     if (userExists) {
         return res.status(401).json({
             error: 'The email or username is already taken'
-          })
+        })
     }
 
     const saltRounds = 10
@@ -56,8 +55,7 @@ router.post(
     
     const token = jwt.sign(userForToken, SECRET)
 
-    res.status(201).send({token, username: user.username})
-
+    res.status(201).send({id: user.id, token: token, username: user.username})
 })
 
 router.post(    
@@ -69,7 +67,7 @@ router.post(
 
   const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}` });
       }
   const { username, email, password, secret } = req.body
 
@@ -113,8 +111,7 @@ router.post(
   
   const token = jwt.sign(userForToken, SECRET)
 
-  res.status(201).send({token, username: user.username})
-
+  res.status(201).send({id: user.id, token: token, username: user.username})
 })
 
 module.exports = router

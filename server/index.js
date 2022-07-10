@@ -2,6 +2,7 @@ const express = require('express')
 const path  = require('path')
 const expressLogging = require('express-logging')
 const logger = require('logops')
+const cors = require('cors')
 
 const { PORT } = require('./src/util/config')
 const { connectToDatabase } = require("./src/util/db")
@@ -18,6 +19,7 @@ const app = express()
 
 app.use(express.json())
 app.use(expressLogging(logger));
+app.use(cors())
 
 app.use("/api/signin", signinRouter)
 app.use("/api/login", loginRouter)
