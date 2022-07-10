@@ -27,39 +27,41 @@ const NavBar = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Perceptual Maps
             </Typography>
-            {user ?
-                (
+            <div style={{display: 'flex', flexDirection: 'col', alignItems:'center'}}>
+                {user ?
+                    (
+                        <>
+                            <Typography variant="body1" component="div" sx={{ flexGrow: 1, marginRight: 5 }}>
+                                Logged in as {user.username}
+                            </Typography>
+                            <Button color="inherit" onClick={logOut}>Logout</Button>  
+                        </>
+                    ) 
+                    : (
                     <>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            {user.username}
-                        </Typography>
-                        <Button color="inherit" onClick={logOut}>Logout</Button>  
+                    <Button color="inherit" onClick={handleMenu}>Login</Button>  
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                        >
+                        <MenuItem onClick={()=>navigate('/login')} >Login</MenuItem>
+                        <MenuItem onClick={()=>navigate('/signin')} >Sign in</MenuItem>
+                    </Menu>
                     </>
-                ) 
-                : (
-                <>
-                <Button color="inherit" onClick={handleMenu}>Login</Button>  
-                <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={()=>navigate('/login')} >Login</MenuItem>
-                    <MenuItem onClick={()=>navigate('/signin')} >Sign in</MenuItem>
-                </Menu>
-                </>
-                )
-            }  
+                    )
+                }  
+            </div>
           </Toolbar>
         </AppBar>
       </Box>

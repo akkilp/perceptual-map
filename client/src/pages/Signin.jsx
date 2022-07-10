@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import signinUser from '../api_calls/signinUser';
 
 import { useContext, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 
 import { MessageContext } from '../components/MessageService';
 import { AuthenticationContext } from '../components/AuthenticationService';
@@ -41,6 +43,8 @@ function Signin() {
 
   const { setMessage } = useContext(MessageContext);
   const { user, setUser } = useContext(AuthenticationContext);
+
+  const navigate = useNavigate()
 
   const handleSignIn = async (payload) => {
     setLoading(true)
@@ -105,9 +109,11 @@ function Signin() {
                   disabled={loading}
                 >
                   Signin
-                </Button>
-                
+                </Button>  
             </form>
+            <Typography variant="caption" sx={{paddingTop: '2rem'}} onClick={()=>navigate('/signin/admin')}>
+              Or register as admin
+            </Typography>
         </Box>
     </Container>
   );

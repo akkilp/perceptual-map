@@ -4,6 +4,15 @@ import { Button, Typography, Box, Container, TextField } from '@mui/material';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 
+import login from '../api_calls/login';
+
+import { useContext, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
+
+import { MessageContext } from '../components/MessageService';
+import { AuthenticationContext } from '../components/AuthenticationService';
+
 const validationSchema = yup.object({
     email: yup
       .string('Enter your email')
@@ -23,10 +32,31 @@ function Login() {
       password: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (credentials) => {
+      handleLogin(credentials)
     },
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const { setMessage } = useContext(MessageContext);
+  const { setUser } = useContext(AuthenticationContext);
+
+  const navigate = useNavigate()
+
+  const handleLogin = async (payload) => {
+    setLoading(true)
+    const response = await login(payload)
+    setLoading(false)
+    setMessage(response)
+    if (response.success === true) {
+      console.log("Response to api succeeded:", response)
+      setUser(response.data)
+      navigate('/')
+    } else {
+      console.log("Response to api failed:", response)
+    }
+  }
 
   return (
     <Container maxWidth="sm">
@@ -59,7 +89,14 @@ function Login() {
                     variant="outlined" 
                     sx={{marginBottom: 2}}
                 />                
-                <Button variant="contained" size="large" type="submit">Login</Button>
+                <Button 
+                variant="contained" 
+                size="large" 
+                type="submit"
+                disabled={loading}
+                >
+                  Login
+                </Button>
             </form>
         </Box>
     </Container>
