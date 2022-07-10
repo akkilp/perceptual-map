@@ -6,19 +6,26 @@ import {useContext} from 'react'
 
 import {AuthenticationContext} from './components/AuthenticationService'
 
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
+
 
 function App() {
-  const {user, setUser} = useContext(AuthenticationContext);
+  const {user, setUser, logOut} = useContext(AuthenticationContext);
 
   return (
     <div className="App">
           <h2>
             Logged in: {!user ? "Not logged in" : "Logged in as " + user.username}
           </h2>
-          <button onClick={()=>setUser(null)}>Logout</button>
-          <Login/>
-          <Signin/>
-          <AdminSignin/>
+          <button onClick={logOut}>Logout</button>
+          <Routes>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/signin" element={<Signin/>}/>
+            <Route path="/signin/admin" element={<AdminSignin/>}/>
+          </Routes>
     </div>
   );
 }
