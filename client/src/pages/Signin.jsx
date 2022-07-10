@@ -58,10 +58,9 @@ function Signin() {
   return (
     <Container maxWidth="sm">
         <Box sx={{ display: "flex", flexDirection: "column", paddingTop: "100px" }}>
-                <Typography variant="h3" >
-                Signin
-                </Typography>
-
+            <Typography variant="h3" sx={{paddingBottom: '1rem'}}>
+              Signin
+            </Typography>
             <form onSubmit={formik.handleSubmit}>
                 <TextField 
                         id="username"

@@ -17,23 +17,23 @@ const validationSchema = yup.object({
 
 function Login() {
 
-    const formik = useFormik({
-        initialValues: {
-          email: '',
-          password: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-          alert(JSON.stringify(values, null, 2));
-        },
-      });
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
   return (
     <Container maxWidth="sm">
         <Box sx={{ display: "flex", flexDirection: "column", paddingTop: "100px" }}>
-                <Typography variant="h3" >
-                Login
-                </Typography>
+            <Typography variant="h3" >
+              Login
+            </Typography>
             <form onSubmit={formik.handleSubmit}>
                 <TextField 
                     id="email"
