@@ -1,5 +1,4 @@
-const bcrypt = require('bcrypt')
-const User = require('../models/user')
+const { User } = require('../models')
 const { tokenExtractor } = require('../util/tokenExtractor')
 const router = require('express').Router()
 
