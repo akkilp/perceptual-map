@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "migrate:down": "node ./src/util/db.js runMigrationsDown()"
+    "migration:down": "node src/util/rollback.js"
   },
   "author": "",
   "license": "ISC",
