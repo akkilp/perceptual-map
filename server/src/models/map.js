@@ -3,6 +3,7 @@ const { Model, DataTypes } = require('sequelize')
 const { sequelize } = require('../util/db')
 
 const User = require('../models/user')
+const Dimension = require('./dimension')
 
 class Map extends Model {}
 
@@ -21,7 +22,7 @@ Map.init({
     allowNull: true
   },
   creator: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
     references: { model: 'users', key: 'id' },
   }
@@ -31,10 +32,20 @@ Map.init({
   timestamps: true,
   modelName: 'map',
   defaultScope: {
-    include: {
-      model: User,
-      attributes: ['id', 'username']
+    attributes: {
+      exclude: ['creator']
     },
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'username'],
+        as: 'createdBy'
+      },
+      {
+        model: Dimension,
+        attributes: ['name', 'valueType', 'minValue', 'maxValue']
+      },
+    ]
   }
 })
 
