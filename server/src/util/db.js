@@ -32,7 +32,7 @@ const runMigrations = async () => {
 const rollback = async () => {
   await sequelize.authenticate()
   const migrator = new Umzug(migrationConf)
-  await migrator.down()
+  await migrator.down({to:0})
   console.log('Migrations rollbacked')
 }
 
