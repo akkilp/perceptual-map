@@ -43,7 +43,7 @@ Map.init({
       },
       {
         model: Dimension,
-        attributes: ['name', 'valueType', 'minValue', 'maxValue']
+        attributes: ['id', 'name', 'valueType', 'minValue', 'maxValue']
       },
     ]
   }
