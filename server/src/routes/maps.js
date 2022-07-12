@@ -1,7 +1,8 @@
 const router = require('express').Router()
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, checkSchema } = require('express-validator');
+const {isValid} = require('../util/isValidAnswer')
 
-const { Map, Dimension } = require('../models')
+const { Map, Dimension, Answer } = require('../models')
 
 const { sequelize } = require('../util/db')
 
@@ -10,12 +11,14 @@ router.get('/', async (req, res) => {
   res.json(maps)
 })
 
+
+// Create new map
 router.post('/', 
   body('title').exists().isLength({min: 3}),
   body('creator').exists().not().isEmpty().toInt(),
   body('description').isString(),
   async (req, res) => {
-    const { title, description, creator, dimensions } = req.body
+    const { title, description, creator } = req.body
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,32 +38,120 @@ router.post('/',
     }
 })
 
-router.post('/:map/dimensions/create', 
-  body().isArray(),
-  body('*.name').exists().isString(),
-  body('*.value_type').exists().isString(),
-  body('*.minValue').isNumeric(),
-  body('*.maxValue').isNumeric(),
+
+const newDimensionSchema = {
+  dimensions: {
+      isArray: true
+  },
+  "dimensions.*.name": {
+    isString: true,
+    exists: true,
+  },
+  "dimensions.*.valueType": {
+    isString: true,
+    exists: true
+  },
+  "dimensions.*.minValue": {
+    isInt: true,
+  },
+  "dimensions.*.maxValue": {
+    isInt: true
+  }
+}
+
+// Create new dimension for a map
+router.post('/:mapId/dimensions', 
+  checkSchema(newDimensionSchema),
   async (req, res) => {
     const { dimensions } = req.body
-    console.log(dimensions)
-/*     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}` });
-    } */
-    
-    try {
-      const _dimensions = dimensions.map((dimension) => {
-        return({...dimension, map_id: 1})
-      })
 
-      const created_dimensions = await Dimension.bulkCreate(_dimensions)
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors)
+      return res.status(400).json({ error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}` });
+    } 
+    
+    const { mapId } = req.params;
+    const mapFound = await Map.findByPk(mapId)
+    if(!mapFound) {
+      return res.status(404).json({error: `Map with id ${mapId} does not exist.`});
+    }
+
+    const dimensionsWithMapId = dimensions.map((dimension) => {
+      return({...dimension, mapId: mapId})
+    })
+
+    try {
+      const created_dimensions = await Dimension.bulkCreate(dimensionsWithMapId)
       res.status(201).send({created_dimensions})
     } catch(error) {
-      console.log(error)
       return res.status(500).json({error: "Creation of dimensions failed", error})
     }
 })
+
+
+
+const newAnswerSchema = {
+  userId: {
+      isInt: true,
+      exists: true,
+      toInt: true,
+  },
+  mapId: {
+    isInt: true,
+    exists: true,
+    toInt: true,
+  },
+  dimensionId: {
+    isInt: true,
+    exists: true,
+    toInt: true,
+  },
+  answer: {
+    exists: true,
+    toString: true,
+  },
+}
+
+// Answer to a specific map
+router.post('/:mapId', checkSchema(newAnswerSchema), async (req, res) => { 
+  const { userId, dimensionId, answer } = req.body;
+  
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}` });
+  } 
+
+  const { mapId } = req.params;
+  const mapFound = await Map.findByPk(mapId)
+  if(!mapFound) {
+    return res.status(404).json({error: `Map with id ${mapId} does not exist.`});
+  }
+
+ const dimensionFound = mapFound.toJSON().dimensions.filter((dim)=> dim.id === dimensionId)
+ if(!dimensionFound || dimensionFound.length <= 0) {
+  return res.status(404).json({error: `Dimension with id ${dimensionId} does not exist.`});
+ }
+
+if (!(isValid(answer, dimensionFound.valueType, dimensionFound.minValue, dimensionFound.maxValue))){
+  return res.status(409).json({error: `The answer value ${answer} does not match with dimension value ${dimensionFound.valueType}`});
+}
+
+
+  try {
+    const answer_response = await Answer.create({
+      userId: userId,
+      dimensionId: dimensionId,
+      mapId: mapId,
+      answer: answer
+    })
+    res.status(201).send({answer_response})
+  } catch(error) {
+    console.log(error)
+    return res.status(500).json({error: "Submitting answer failed", error})
+  }
+}
+)
 
 
 module.exports = router
