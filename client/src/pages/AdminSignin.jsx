@@ -3,14 +3,11 @@ import { Button, Typography, Box, Container, TextField } from '@mui/material';
 
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import { useNavigate } from "react-router-dom";
+import useRegister from '../hooks/useRegister';
+
 import signinAdmin from '../api_calls/signinAdmin';
 
-import { useContext, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-
-
-import { MessageContext } from '../components/MessageService';
-import { AuthenticationContext } from '../components/AuthenticationService';
 
 
 const validationSchema = yup.object({
@@ -40,29 +37,11 @@ function AdminSignin() {
       secret:''
     },
     validationSchema: validationSchema,
-    onSubmit: (credentials) => handleSignIn(credentials)
+    onSubmit: (credentials) => handleApiSubmit(credentials)
   });
 
-  const [loading, setLoading] = useState(false);
-
-  const { setMessage } = useContext(MessageContext);
-  const { setUser } = useContext(AuthenticationContext);
-
+  const [handleApiSubmit, loading] = useRegister(signinAdmin)
   const navigate = useNavigate()
-
-  const handleSignIn = async (payload) => {
-    setLoading(true)
-    const response = await signinAdmin(payload)
-    setLoading(false)
-    setMessage(response)
-    if (response.success === true) {
-      console.log("Response to api succeeded:", response)
-      setUser(response.data)
-      navigate('/')
-    } else {
-      console.log("Response to api failed:", response)
-    }
-  }
 
   return (
     <Container maxWidth="sm">
@@ -128,6 +107,9 @@ function AdminSignin() {
                   Sign in
                 </Button>  
             </form>
+            <Typography variant="caption" sx={{marginTop: '2rem', cursor: 'pointer'}} onClick={()=>navigate('/signin')}>
+              Or register as admin
+            </Typography>
         </Box>
     </Container>
   );

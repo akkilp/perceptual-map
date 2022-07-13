@@ -5,12 +5,8 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import signinUser from '../api_calls/signinUser';
 
-import { useContext, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-
-
-import { MessageContext } from '../components/MessageService';
-import { AuthenticationContext } from '../components/AuthenticationService';
+import useRegister from '../hooks/useRegister';
+import { useNavigate } from 'react-router-dom'
 
 
 const validationSchema = yup.object({
@@ -36,34 +32,17 @@ function Signin() {
       username: ''
     },
     validationSchema: validationSchema,
-    onSubmit: (credentials) => handleSignIn(credentials)
+    onSubmit: (credentials) => handleApiSubmit(credentials)
   });
 
-  const [loading, setLoading] = useState(false);
-
-  const { setMessage } = useContext(MessageContext);
-  const { user, setUser } = useContext(AuthenticationContext);
-
+  const [handleApiSubmit, loading] = useRegister(signinUser)
   const navigate = useNavigate()
-
-  const handleSignIn = async (payload) => {
-    setLoading(true)
-    const response = await signinUser(payload)
-    setLoading(false)
-    setMessage(response)
-    if (response.success === true) {
-      console.log("Response to api succeeded:", response)
-      setUser(response.data)
-    } else {
-      console.log("Response to api failed:", response)
-    }
-  }
 
   return (
     <Container maxWidth="sm">
         <Box sx={{ display: "flex", flexDirection: "column", paddingTop: "100px" }}>
             <Typography variant="h3" sx={{paddingBottom: '1rem'}}>
-              Signin
+              Sign in
             </Typography>
             <form onSubmit={formik.handleSubmit}>
                 <TextField 
@@ -111,7 +90,7 @@ function Signin() {
                   Signin
                 </Button>  
             </form>
-            <Typography variant="caption" sx={{paddingTop: '2rem'}} onClick={()=>navigate('/signin/admin')}>
+            <Typography variant="caption" sx={{marginTop: '2rem', cursor: 'pointer'}} onClick={()=>navigate('/signin/admin')}>
               Or register as admin
             </Typography>
         </Box>

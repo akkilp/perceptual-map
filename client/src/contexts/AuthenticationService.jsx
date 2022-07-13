@@ -4,6 +4,8 @@ export const AuthenticationContext = React.createContext(null);
 const AuthenticationService = ({children}) => {
     const [user, setUser] = React.useState(null);
     const [authHeader, setAuth] = React.useState(null)
+    const [loading, setLoading] = React.useState(true)
+    
   
 
     // When site in launched, check if local storage remembers the user
@@ -13,6 +15,7 @@ const AuthenticationService = ({children}) => {
             const u = JSON.parse(userInLocalStorage)
             setUser(u)
         }
+        setLoading(false)
     }, [])
 
     // Every time user state is changed, update local storage & the header object that is passed to http request for backend
@@ -36,7 +39,7 @@ const AuthenticationService = ({children}) => {
     }
 
     return(
-        <AuthenticationContext.Provider value={{user, setUser, authHeader, logOut}}>
+        <AuthenticationContext.Provider value={{loading, user, setUser, authHeader, logOut}}>
             {children}
         </AuthenticationContext.Provider>
     )
