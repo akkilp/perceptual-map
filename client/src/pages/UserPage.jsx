@@ -1,7 +1,8 @@
 import { Typography, Box, Container, Paper, Grid, ListItem, List, IconButton, ListItemText } from "@mui/material";
 
 import {useContext, cloneElement} from 'react'
-import { AuthenticationContext } from "../components/AuthenticationService";
+
+import { AuthenticationContext } from '../contexts/AuthenticationService';
 
 
 function generate(element) {
@@ -15,7 +16,7 @@ function generate(element) {
 const UserPage = () => {
 
     const { user } = useContext(AuthenticationContext);
-
+    console.log(user)
     if(!user) return
     
     return (
