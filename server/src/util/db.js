@@ -34,6 +34,7 @@ const rollback = async () => {
   const migrator = new Umzug(migrationConf)
   await migrator.down({to:0})
   console.log('Migrations rollbacked')
+  return
 }
 
 const connectToDatabase = async () => {

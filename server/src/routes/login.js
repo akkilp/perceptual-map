@@ -20,6 +20,7 @@ router.post(
     const { email, password } = req.body
 
     const user = await User.findOne({ 
+      attributes: ['id', 'username', 'passwordHash', 'admin'],
       where: { 
         email: email
       },
@@ -36,13 +37,14 @@ router.post(
     }
 
     const userForToken = {
+      id: user.id,
       username: user.username,
-      id: user._id,
+      admin: user.admin
     }
     
     const token = jwt.sign(userForToken, SECRET)
 
-    res.status(200).send({id: user.id, token: token, username: user.username})
+    res.status(200).send({id: user.id, token: token, username: user.username, admin: user.admin})
 
 })
 

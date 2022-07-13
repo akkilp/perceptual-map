@@ -21,12 +21,13 @@ const registrationFunction = async (req, res ,isAdmin=false) => {
     const { username, email, password } = req.body
     
     const userExists = await User.findOne({ 
+        attributes: ['username', 'email', 'passwordHash'],
         where: { 
           [Op.or]: [
             { username: username},
             { email: email }
           ]
-        }
+        },
     })
 
     if (userExists) {
@@ -59,8 +60,9 @@ const registrationFunction = async (req, res ,isAdmin=false) => {
     const user = await User.create(newUserObj)
 
     const userForToken = {
-      username: user.username,
       id: user.id,
+      username: user.username,
+      admin: user.admin
     }
     
     const token = jwt.sign(userForToken, SECRET)

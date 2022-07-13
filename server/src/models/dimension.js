@@ -2,7 +2,6 @@ const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../util/db')
 
-const Map = require('../models/map')
 
 class Dimension extends Model {}
 

@@ -2,8 +2,10 @@ const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../util/db')
 
-const User = require('../models/user')
+const User = require("./user")
 const Dimension = require('./dimension')
+const Answer = require('./answer')
+
 
 class Map extends Model {}
 
@@ -45,6 +47,11 @@ Map.init({
         model: Dimension,
         attributes: ['id', 'name', 'valueType', 'minValue', 'maxValue']
       },
+      {
+        model: Answer,
+        attributes: ['user_id', 'dimension_id', 'answer']
+      },
+
     ]
   }
 })

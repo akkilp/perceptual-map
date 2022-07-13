@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken')
-const { SECRET } = require('./config.js')
+const { SECRET } = require('../util/config.js')
 
 
-// Middleware that extracts the authentication header which verifies the user using JWT-token
-// Can also been used for authentication for registered users
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {

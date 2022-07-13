@@ -4,11 +4,21 @@ const {isValid} = require('../util/isValidAnswer')
 
 const { Map, Dimension, Answer } = require('../models')
 
-const { sequelize } = require('../util/db')
+const { sequelize } = require('../util/db');
+const { tokenExtractor } = require('../auth/tokenExtractor');
 
 router.get('/', async (req, res) => {
   const maps =  await Map.findAll()
   res.json(maps)
+})
+
+router.get('/:mapId', async (req, res) => {
+  const { mapId } = req.params;
+  const map = await Map.findByPk(mapId)
+  if(!map) {
+    return res.status(404).json({error: `Map with id ${mapId} does not exist.`});
+  }
+  res.status(200).send(map)
 })
 
 
@@ -17,6 +27,7 @@ router.post('/',
   body('title').exists().isLength({min: 3}),
   body('creator').exists().not().isEmpty().toInt(),
   body('description').isString(),
+  tokenExtractor,
   async (req, res) => {
     const { title, description, creator } = req.body
 
