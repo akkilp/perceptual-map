@@ -51,9 +51,8 @@ Map.init({
         model: Answer,
         attributes: ['user_id', 'dimension_id', 'answer']
       },
-
     ]
-  }
+  },
 })
 
 module.exports = Map

@@ -144,9 +144,11 @@ router.post('/:mapId', checkSchema(newAnswerSchema), async (req, res) => {
   return res.status(404).json({error: `Dimension with id ${dimensionId} does not exist.`});
  }
 
-if (!(isValid(answer, dimensionFound.valueType, dimensionFound.minValue, dimensionFound.maxValue))){
-  return res.status(409).json({error: `The answer value ${answer} does not match with dimension value ${dimensionFound.valueType}`});
-}
+  const {valueType, minValue, maxValue} = dimensionFound[0]
+  const inputValueMatchesDimension = isValid(answer, valueType, minValue, maxValue)
+  if (!(inputValueMatchesDimension)){
+    return res.status(409).json({error: `The answer value ${answer} does not match with dimension value ${dimensionFound.valueType}`});
+  }
 
 
   try {
@@ -158,7 +160,6 @@ if (!(isValid(answer, dimensionFound.valueType, dimensionFound.minValue, dimensi
     })
     res.status(201).send({answer_response})
   } catch(error) {
-    console.log(error)
     return res.status(500).json({error: "Submitting answer failed", error})
   }
 }
