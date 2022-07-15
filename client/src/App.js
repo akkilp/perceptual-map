@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import MapPage from "./pages/MapPage";
 import BrowseMaps from "./pages/BrowseMaps";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateMap from "./pages/CreateMap";
 
 function App() {
   return (
@@ -25,7 +26,9 @@ function App() {
         <Route path="/" element={<Lander/>}/>
         <Route path="/user" element={<UserPage/>}/>
         <Route path="/maps" element={<BrowseMaps/>}/>
+        <Route path="/maps/create" element={<CreateMap/>} />
         <Route path="/maps/:mapId" element={<MapPage/>} />
+
         <Route path="/login" element={<Login/>}/>
         <Route path="/signin" element={<Signin/>}/>
         <Route path="/signin/admin" element={<AdminSignin/>}/>

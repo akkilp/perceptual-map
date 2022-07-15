@@ -5,10 +5,38 @@ import React from 'react'
 import ClickableList from "../components/ClickableList";
 import useAuth from "../hooks/useAuth";
 
-const Home = () => {
-    const { user } = useAuth()
+import fetchUserContent from "../api_calls/fetchUserContent";
+import useFetch from "../hooks/useFetch";
+import Loading from '../components/Loading'
+import { useEffect } from "react";
+import axios from "axios";
+import makeAuthHeader from "../util/makeAuthHeader";
 
-    const items =  [0, 1, 2, 3]
+import useMessager from "../hooks/useMessager";
+
+import { useNavigate } from "react-router-dom";
+
+const Home = () => {
+  const { user } = useAuth()
+  const {setMessage} = useMessager()
+  const [loading, error, response] = useFetch( fetchUserContent(user.id, makeAuthHeader(user.token)) )
+  const navigate = useNavigate()
+
+  if (loading){
+    return (
+      <Container maxWidth="xl" sx={{ mt: 20, mb: 4,  display: 'flex', justifyContent: 'center', alignItems:'center' }}>
+        <Loading/>
+      </Container>
+    )
+  } 
+
+  if(error){
+    setMessage(error)
+  } 
+  
+  const { admin, answers, maps, username } = response.data;
+
+    const items =  []
     return(
             <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
@@ -19,18 +47,20 @@ const Home = () => {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 230,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexGrow:1
                   }}
                 >
-                        <React.Fragment>
-                            <Typography component="p" variant="h4">
-                                Hello {user.username}
-                            </Typography>
-                            <Typography color="text.secondary" sx={{ flex: 1 }}>
-                                on 15 March, 2019
-                            </Typography>
+                    <Typography sx={{paddingBottom:2, }}component="p" variant="h4">
+                        Hello {username} {!admin && <span style={{position:'absolute', color: 'green', fontSize:20, marginLeft:15}}>admin user</span>}
+                    </Typography>
+                    <Typography component="p" variant="body">
+                        Dont know what to do?
+                        You can start by reading where <Link href="https://en.wikipedia.org/wiki/Perceptual_mapping">perceptual maps</Link> are used for.
+                    </Typography>
 
-                        </React.Fragment>
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -39,25 +69,14 @@ const Home = () => {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 230,
+                    justifyContent: 'space-evenly',
+                    alignItems:'center'
                   }}
                 >
-                        <React.Fragment>
-                            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                                Käyttäjä
-                            </Typography>
-                            <Typography component="p" variant="h4">
-                                $3,024.00
-                            </Typography>
-                            <Typography color="text.secondary" sx={{ flex: 1 }}>
-                                on 15 March, 2019
-                            </Typography>
-                            <div>
-                                <Link color="primary" href="#" onClick={()=>console.log("hurraa")}>
-                                View balance
-                                </Link>
-                            </div>
-                        </React.Fragment>
+                      <Button sx={{ width: 200, height: 50 }}  variant="contained">Browse</Button>
+                      <Button onClick={()=>navigate('/maps/create')} sx={{ width: 200, height: 50  }} variant="contained">Create new</Button>
+
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -65,6 +84,7 @@ const Home = () => {
                     <ClickableList 
                         label="My maps"
                         items={items}
+                        emptyLabel="You have not created maps yet."
                     />
                 </Paper>
               </Grid>
@@ -73,6 +93,7 @@ const Home = () => {
                     <ClickableList 
                         label="Answered maps"
                         items={items}
+                        emptyLabel="You have not answered to maps yet."
                     />
                 </Paper>
               </Grid>

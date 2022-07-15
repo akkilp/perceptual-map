@@ -37,7 +37,7 @@ const NavBar = () => {
                     (
                         <>
                             <Typography variant="body1" component="div" sx={{ flexGrow: 1, marginRight: 5 }}>
-                                Logged in as {user.username}
+                                Logged in as {user.username} {user.admin && " (admin)"}
                             </Typography>
                             <Button color="inherit" onClick={handleLogout}>Logout</Button>  
                         </>
