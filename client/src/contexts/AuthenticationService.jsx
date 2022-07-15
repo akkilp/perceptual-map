@@ -3,10 +3,7 @@ export const AuthenticationContext = React.createContext(null);
 
 const AuthenticationService = ({children}) => {
     const [user, setUser] = React.useState(null);
-    const [authHeader, setAuth] = React.useState(null)
     const [loading, setLoading] = React.useState(true)
-    
-  
 
     // When site in launched, check if local storage remembers the user
     useEffect(()=>{
@@ -21,12 +18,6 @@ const AuthenticationService = ({children}) => {
     // Every time user state is changed, update local storage & the header object that is passed to http request for backend
     useEffect(()=>{
         if(user && user.token){
-            const authenticationHeader = {
-                headers: {
-                    Authorization: `bearer ${user.token}`
-                }
-            } 
-            setAuth(authenticationHeader)
             window.localStorage.setItem(
                 'PerceptualMapUserCredentials', JSON.stringify(user)
             ) 
@@ -39,7 +30,7 @@ const AuthenticationService = ({children}) => {
     }
 
     return(
-        <AuthenticationContext.Provider value={{loading, user, setUser, authHeader, logOut}}>
+        <AuthenticationContext.Provider value={{loading, user, setUser, logOut}}>
             {children}
         </AuthenticationContext.Provider>
     )
