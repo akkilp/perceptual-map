@@ -1,36 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+export const MessageContext = React.createContext(null)
 
-export const MessageContext = React.createContext(null);
-
-const MessageService = ({children}) => {
-    const [message, setMessage] = React.useState(null);
-
-    useEffect(()=>{
-        if(!message){
-            return
-        }
-        displayMessage(message)
-    }, [message])
-
-    const displayMessage = (messageObject) => {
-        const {message, success} = messageObject
+const MessageService = ({ children }) => {
+    const displayMessage = (message, messageType) => {
         const selectToast = () => {
-            if(success === true) {
+            if (messageType === 'success') {
                 return toast.success
-            } 
-            if(success === false) {
+            }
+            if (messageType === 'error') {
                 return toast.error
             }
         }
-        selectToast()(message, {toastId: message})
+        selectToast()(message, { toastId: message })
     }
 
-    return(
-        <MessageContext.Provider value={{setMessage}}>
+    return (
+        <MessageContext.Provider value={{ displayMessage }}>
             {children}
             <ToastContainer
                 position="bottom-center"
@@ -47,8 +36,4 @@ const MessageService = ({children}) => {
     )
 }
 
-export default MessageService;
-
-
-
-
+export default MessageService

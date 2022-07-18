@@ -1,23 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import App from './App'
 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom'
 
-import MessageService from './contexts/MessageService';
-import AuthenticationService from './contexts/AuthenticationService';
+import MessageService from './contexts/MessageService'
+import AuthenticationService from './contexts/AuthenticationService'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-  <React.StrictMode>
     <AuthenticationService>
-      <MessageService>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </MessageService>
+        <MessageService>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </MessageService>
     </AuthenticationService>
-  </React.StrictMode>
-);
-
+)
