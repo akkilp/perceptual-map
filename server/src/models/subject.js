@@ -15,7 +15,11 @@ Subject.init(
       type: DataTypes.STRING, // The value is conditionally changed to proper type in server side
       allowNull: false,
     },
-    map_id: {
+    color: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    mapId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "maps", key: "id" },

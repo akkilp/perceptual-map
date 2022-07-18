@@ -12,6 +12,10 @@ module.exports = {
         type: DataTypes.STRING, // The value is conditionally changed to proper type in server side
         allowNull: false,
       },
+      color: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       map_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -25,7 +29,6 @@ module.exports = {
       });
   },
   down: async ({ context: queryInterface }) => {
-    await queryInterface.removeColumn("subjects", "map_id");
     await queryInterface.removeColumn("answers", "subject_id");
     await queryInterface.dropTable("subjects");
   },

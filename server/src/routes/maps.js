@@ -7,7 +7,7 @@ const {
 } = require("express-validator");
 const { isValid } = require("../util/isValidAnswer");
 
-const { Map, Dimension, Answer } = require("../models");
+const { Map, Dimension, Answer, Subject } = require("../models");
 
 const { sequelize } = require("../util/db");
 const { tokenExtractor } = require("../auth/tokenExtractor");
@@ -226,6 +226,11 @@ const newAnswerSchema = {
     exists: true,
     toInt: true,
   },
+  subjectId: {
+    isInt: true,
+    exists: true,
+    toInt: true,
+  },
   answer: {
     exists: true,
     toString: true,
@@ -234,7 +239,7 @@ const newAnswerSchema = {
 
 // Answer to a specific map
 router.post("/:mapId", checkSchema(newAnswerSchema), async (req, res) => {
-  const { userId, dimensionId, answer } = req.body;
+  const { userId, dimensionId, answer, subjectId } = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -254,6 +259,7 @@ router.post("/:mapId", checkSchema(newAnswerSchema), async (req, res) => {
   const dimensionFound = mapFound
     .toJSON()
     .dimensions.filter((dim) => dim.id === dimensionId);
+
   if (!dimensionFound || dimensionFound.length <= 0) {
     return res
       .status(404)
@@ -279,10 +285,91 @@ router.post("/:mapId", checkSchema(newAnswerSchema), async (req, res) => {
       dimensionId: dimensionId,
       mapId: mapId,
       answer: answer,
+      subjectId: subjectId,
     });
     res.status(201).send({ answer_response });
   } catch (error) {
     return res.status(500).json({ error: "Submitting answer failed", error });
+  }
+});
+
+router.post("/:mapId/subjects", async (req, res) => {
+  const { name, color } = req.body;
+
+  const { mapId } = req.params;
+  const mapFound = await Map.findByPk(mapId);
+  if (!mapFound) {
+    return res
+      .status(404)
+      .json({ error: `Map with id ${mapId} does not exist.` });
+  }
+
+  const newSubject = {
+    name: name,
+    color: color,
+    mapId: mapId,
+  };
+
+  try {
+    console.log(newSubject);
+    const createdSubject = await Subject.create(newSubject);
+    res.status(201).send(createdSubject);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Creation of subject failed", error });
+  }
+});
+
+router.delete("/:mapId/:dimensionId", async (req, res) => {
+  const { mapId, subjectId } = req.params;
+
+  const mapFound = await Map.findByPk(mapId);
+  if (!mapFound) {
+    return res
+      .status(404)
+      .json({ error: `Map with id ${mapId} does not exist.` });
+  }
+
+  const subjectFound = await Subject.findByPk(subjectId);
+  if (!subjectFound) {
+    return res.status(404).json({ error: `Subject does not exist.` });
+  }
+
+  try {
+    await Subject.destroy({
+      where: { id: subjectId },
+    });
+    res.status(204).end();
+  } catch (error) {
+    return res.status(500).json({ error: "Deleting subject failed", error });
+  }
+});
+
+router.patch("/:mapId/subjects", async (req, res) => {
+  const { id, name, color } = req.body;
+
+  const { mapId } = req.params;
+  const mapFound = await Map.findByPk(mapId);
+  if (!mapFound) {
+    return res
+      .status(404)
+      .json({ error: `Map with id ${mapId} does not exist.` });
+  }
+
+  const updatedSubject = {
+    id: id,
+    name: name,
+    color: color,
+  };
+
+  try {
+    const targetSubject = await Subject.findByPk(id);
+    targetSubject.set(updatedSubject);
+    await targetSubject.save();
+    res.status(201).send(updatedSubject);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Updating Subjects failed", error });
   }
 });
 
