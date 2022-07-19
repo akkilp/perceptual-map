@@ -45,15 +45,13 @@ const SubjectList = ({
 
     const { displayMessage } = useMessager()
 
-    const [handleApiSubmit, loading, error, response] =
-        useSubmit(/* deleteSubject */)
+    const [handleApiSubmit, loading, error, response] = useSubmit(deleteSubject)
 
     const { mapId } = useParams()
 
     React.useEffect(() => {
         if (response) {
-            const message = 'Subject deleted'
-            displayMessage(message, 'success')
+            displayMessage(response.statusText, 'success')
             const idFromUrl = response.config.url.split('/').pop()
             deleteItem(parseInt(idFromUrl))
         } else if (error) {
@@ -189,10 +187,7 @@ const EditSubject = ({ data, editing, handleUpdate, closeEditor }) => {
 
     useEffect(() => {
         if (response) {
-            const message = `${
-                editing ? 'Updated' : 'Created'
-            } subject succesfully.`
-            displayMessage(message, 'success')
+            displayMessage(response.statusText, 'success')
             handleUpdate(response.data)
         } else if (error) {
             displayMessage(error.message, 'error')
@@ -204,7 +199,7 @@ const EditSubject = ({ data, editing, handleUpdate, closeEditor }) => {
     }
 
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form style={{ width: '100%' }} onSubmit={formik.handleSubmit}>
             <Box
                 sx={{
                     display: 'flex',

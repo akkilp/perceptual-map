@@ -78,10 +78,7 @@ const EditDimension = ({ handleClose, data, editing, handleUpdate }) => {
 
     useEffect(() => {
         if (response) {
-            const message = `${
-                editing ? 'Updated' : 'Created'
-            } dimension succesfully.`
-            displayMessage(message, 'success')
+            displayMessage(response.statusText, 'success')
             handleUpdate(response.data)
         } else if (error) {
             displayMessage(error.message, 'error')
@@ -97,6 +94,8 @@ const EditDimension = ({ handleClose, data, editing, handleUpdate }) => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
+                    px: 2,
+                    py: 1,
                 }}
             >
                 <IconButton onClick={handleClose}>
@@ -195,6 +194,7 @@ const EditDimension = ({ handleClose, data, editing, handleUpdate }) => {
                     color="primary"
                     aria-label="add"
                     type="submit"
+                    size="medium"
                     disabled={loading}
                 >
                     {loading ? <CircularProgress /> : <CheckIcon />}

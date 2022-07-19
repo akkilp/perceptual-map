@@ -51,6 +51,8 @@ router.post(
         title: title,
         description: description,
       });
+
+      res.statusMessage = `Map '${title}' created succesfully.`;
       res.status(201).send(map);
     } catch (error) {
       console.log(error);
@@ -109,6 +111,7 @@ router.post(
 
     try {
       const createdDimension = await Dimension.create(newDimension);
+      res.statusMessage = `Dimension '${name}' created succesfully.`;
       res.status(201).send(createdDimension);
     } catch (error) {
       console.log(error);
@@ -171,9 +174,10 @@ router.patch(
 
     try {
       const targetDimension = await Dimension.findByPk(id);
-      console.log(targetDimension);
+
       targetDimension.set(updatedDimension);
       await targetDimension.save();
+      res.statusMessage = `Dimension '${name}' updated succesfully.`;
       res.status(201).send(updatedDimension);
     } catch (error) {
       console.log(error);
@@ -204,6 +208,7 @@ router.delete("/:mapId/:dimensionId", async (req, res) => {
     await Dimension.destroy({
       where: { id: dimensionId },
     });
+    res.statusMessage = `Dimension '${dimensionFound.name}' was deleted succesfully.`;
     res.status(204).end();
   } catch (error) {
     return res.status(500).json({ error: "Deleting dimension failed", error });
@@ -287,6 +292,7 @@ router.post("/:mapId", checkSchema(newAnswerSchema), async (req, res) => {
       answer: answer,
       subjectId: subjectId,
     });
+
     res.status(201).send({ answer_response });
   } catch (error) {
     return res.status(500).json({ error: "Submitting answer failed", error });
@@ -311,8 +317,8 @@ router.post("/:mapId/subjects", async (req, res) => {
   };
 
   try {
-    console.log(newSubject);
     const createdSubject = await Subject.create(newSubject);
+    res.statusMessage = `Subject '${name}' created succesfully.`;
     res.status(201).send(createdSubject);
   } catch (error) {
     console.log(error);
@@ -339,6 +345,7 @@ router.delete("/:mapId/subjects/:subjectId", async (req, res) => {
     await Subject.destroy({
       where: { id: subjectId },
     });
+    res.statusMessage = `Subject '${subjectFound.name}' was deleted succesfully.`;
     res.status(204).end();
   } catch (error) {
     return res.status(500).json({ error: "Deleting subject failed", error });
@@ -361,7 +368,6 @@ router.patch("/:mapId/subjects", async (req, res) => {
     name: name,
     color: color,
   };
-  console.log(updatedSubject);
   try {
     const targetSubject = await Subject.findByPk(id);
     if (!targetSubject) {
@@ -372,6 +378,7 @@ router.patch("/:mapId/subjects", async (req, res) => {
 
     targetSubject.set(updatedSubject);
     await targetSubject.save();
+    res.statusMessage = `Subject was updated succesfully.`;
     res.status(201).send(updatedSubject);
   } catch (error) {
     console.log(error);

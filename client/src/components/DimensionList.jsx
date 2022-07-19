@@ -58,8 +58,7 @@ const DimensionList = ({
 
     useEffect(() => {
         if (response) {
-            const message = 'Dimension deleted'
-            displayMessage(message, 'success')
+            displayMessage(response.statusText, 'success')
             const idFromUrl = response.config.url.split('/').pop()
             deleteItem(parseInt(idFromUrl))
         } else if (error) {
@@ -122,6 +121,7 @@ const DimensionList = ({
     return (
         <>
             <List
+                sx={{ p: 0 }}
                 subheader={
                     <Typography
                         component="h2"
@@ -134,22 +134,24 @@ const DimensionList = ({
                 }
             >
                 {isEmpty ? <Typography>{emptyLabel}</Typography> : renderList}
+                {showNew ? (
+                    <EditDimension
+                        handleClose={() => setShowNew(false)}
+                        handleUpdate={updateList}
+                    />
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'end' }}>
+                        <Button
+                            variant="contained"
+                            sx={{ alignSelf: 'end', mt: 3 }}
+                            onClick={() => setShowNew(true)}
+                            disabled={editing ? true : false}
+                        >
+                            Create new
+                        </Button>
+                    </div>
+                )}
             </List>
-
-            {showNew ? (
-                <EditDimension
-                    handleClose={() => setShowNew(false)}
-                    handleUpdate={updateList}
-                />
-            ) : (
-                <Button
-                    variant="contained"
-                    sx={{ alignSelf: 'end' }}
-                    onClick={() => setShowNew(true)}
-                >
-                    Create new
-                </Button>
-            )}
         </>
     )
 }
