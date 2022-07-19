@@ -24,7 +24,11 @@ Answer.belongsTo(Map);
 Dimension.hasMany(Answer, { foreignKey: "dimension_id" });
 Answer.belongsTo(Dimension);
 
-Subject.hasMany(Answer, { foreignKey: "subject_id" });
+Subject.hasMany(Answer, {
+  foreignKey: "subject_id",
+  onDelete: "cascade",
+  hooks: true,
+});
 Answer.belongsTo(Subject);
 Map.hasMany(Subject, { foreignKey: "map_id" });
 Subject.belongsTo(Map);

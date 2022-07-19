@@ -68,3 +68,38 @@ export const deleteDimension = (dimId, mapId, options) => {
         success: 'Dimension deleted succesfully.',
     })
 }
+
+export const createSubject = (payload, mapId, options) => {
+    return apiCallWithPayload(
+        axios.post,
+        `/api/maps/${mapId}/subjects`,
+        payload,
+        options,
+        {
+            success: 'Subject created succesfully.',
+        }
+    )
+}
+
+export const updateSubject = (payload, mapId, options) => {
+    return apiCallWithPayload(
+        axios.patch,
+        `/api/maps/${mapId}/subjects`,
+        payload,
+        options,
+        {
+            success: 'Subject updated succesfully.',
+        }
+    )
+}
+
+export const deleteSubject = (dimId, mapId, options) => {
+    return apiCall(
+        axios.delete,
+        `/api/maps/${mapId}/subjects/${dimId}`,
+        options,
+        {
+            success: 'Subjects deleted succesfully.',
+        }
+    )
+}

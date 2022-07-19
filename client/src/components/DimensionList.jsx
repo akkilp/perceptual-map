@@ -45,22 +45,16 @@ const DimensionList = ({
     title = 'Dimensions',
     emptyLabel = 'There exists no dimensions',
 }) => {
+    const [items, setItems] = React.useState(dimensions)
+    const [showNew, setShowNew] = React.useState(false)
+    const [editing, setEditing] = React.useState(null)
+
+    const { displayMessage } = useMessager()
+
     const [handleApiSubmit, loading, error, response] =
         useSubmit(deleteDimension)
 
-    const { displayMessage } = useMessager()
-    const [items, setItems] = React.useState(dimensions)
-
-    const [showNew, setShowNew] = React.useState(false)
-
-    const [editing, setEditing] = React.useState(null)
-
     const { mapId } = useParams()
-
-    const deleteItem = (id) => {
-        const updatedItems = items.filter((item) => item.id !== id)
-        setItems(updatedItems)
-    }
 
     useEffect(() => {
         if (response) {
@@ -73,7 +67,10 @@ const DimensionList = ({
         }
     }, [loading, error, response])
 
-    const isEmpty = items.length <= 0
+    const deleteItem = (id) => {
+        const updatedItems = items.filter((item) => item.id !== id)
+        setItems(updatedItems)
+    }
 
     const updateList = (newItem) => {
         const duplicatesRemoved = items.filter((item) => item.id !== newItem.id)
@@ -83,10 +80,12 @@ const DimensionList = ({
         setEditing(null)
     }
 
+    const isEmpty = items.length <= 0
+
     const renderList = items.map((item) => {
         const infoString = `${item.valueType} · Min value: ${item.minValue} · Max value: ${item.maxValue}`
         return (
-            <>
+            <div key={item.id}>
                 <ListItem
                     key={item.id}
                     sx={{
@@ -116,7 +115,7 @@ const DimensionList = ({
                     )}
                 </ListItem>
                 <Divider component="li" />
-            </>
+            </div>
         )
     })
 

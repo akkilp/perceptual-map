@@ -13,9 +13,6 @@ import DimensionList from '../components/DimensionList'
 const MapPage = () => {
     let { mapId } = useParams()
     const [loading, error, data] = useFetch(() => fetchMap(mapId))
-
-    const [createNew, setCreateNew] = useState(false)
-
     const navigate = useNavigate()
 
     if (loading)
@@ -31,23 +28,37 @@ const MapPage = () => {
                 <Loading />
             </Container>
         )
-    if (error & !loading)
-        return <h2>Error occurred: {error.status + error.message}</h2>
-
-    const { title, createdBy, description, answers, createdAt, dimensions } =
-        data.data
+    if (error) {
+        return (
+            <Container
+                sx={{
+                    width: '100%',
+                    mt: 20,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <Typography variant="h4">
+                    Content you tried to reach does not exist
+                </Typography>
+            </Container>
+        )
+    }
+    const {
+        title,
+        createdBy,
+        description,
+        answers,
+        createdAt,
+        dimensions,
+        subjects,
+    } = data.data
 
     const dateObject = new Date(createdAt.replace(' ', 'T'))
 
     const parsedDate = `${dateObject.getDate()}/${
         dateObject.getMonth() + 1
     }/${dateObject.getFullYear()}`
-
-    let subjects = [
-        { id: 1, name: 'McDonals', color: '#ff0000' },
-        { id: 2, name: 'Hesburger', color: '#AA4A44' },
-        { id: 3, name: 'Burger King', color: '#EE4B2B' },
-    ]
 
     return (
         <Container

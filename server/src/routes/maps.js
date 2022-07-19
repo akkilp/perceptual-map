@@ -320,7 +320,7 @@ router.post("/:mapId/subjects", async (req, res) => {
   }
 });
 
-router.delete("/:mapId/:dimensionId", async (req, res) => {
+router.delete("/:mapId/subjects/:subjectId", async (req, res) => {
   const { mapId, subjectId } = req.params;
 
   const mapFound = await Map.findByPk(mapId);
@@ -361,9 +361,15 @@ router.patch("/:mapId/subjects", async (req, res) => {
     name: name,
     color: color,
   };
-
+  console.log(updatedSubject);
   try {
     const targetSubject = await Subject.findByPk(id);
+    if (!targetSubject) {
+      return res
+        .status(404)
+        .json({ error: `Subject with ${id} does not exist.` });
+    }
+
     targetSubject.set(updatedSubject);
     await targetSubject.save();
     res.status(201).send(updatedSubject);

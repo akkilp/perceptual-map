@@ -7,38 +7,38 @@ import {
     ListItemButton,
     Typography,
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const ClickableList = ({ items, label, emptyLabel = 'There are no items' }) => {
+    const navigate = useNavigate()
     const listContents =
-        items.length <= 0 ? (
+        !items || items.length <= 0 ? (
             <Typography>{emptyLabel}</Typography>
         ) : (
             <>
-                {items.map((item) => (
-                    <ListItem
-                        key={item}
-                        secondaryAction={
-                            <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={(event) =>
-                                    console.log('icon button clicked', event)
-                                }
-                            >
-                                ···
-                            </IconButton>
-                        }
-                        disablePadding
-                    >
-                        <ListItemButton
-                            onClick={(event) =>
-                                console.log('inside button clicked', event)
+                {items.map((item) => {
+                    return (
+                        <ListItem
+                            key={item.title}
+                            secondaryAction={
+                                <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    onClick={(event) => console.log('hurraa')}
+                                >
+                                    ···
+                                </IconButton>
                             }
+                            disablePadding
                         >
-                            <ListItemText primary={item} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                            <ListItemButton
+                                onClick={() => navigate(`/maps/${item.id}`)}
+                            >
+                                <ListItemText primary={item.title} />
+                            </ListItemButton>
+                        </ListItem>
+                    )
+                })}
             </>
         )
 

@@ -26,6 +26,8 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: "subjects", key: "id" },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       });
   },
   down: async ({ context: queryInterface }) => {

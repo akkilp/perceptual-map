@@ -15,7 +15,7 @@ router.get("/:userId", tokenExtractor, isMe(), async (req, res) => {
       include: [
         {
           model: Map,
-          attributes: ["title", "description", "created_at"],
+          attributes: ["id", "title", "description", "created_at"],
         },
         {
           model: Answer,

@@ -1,16 +1,15 @@
 import { BlockPicker } from 'react-color'
 import React from 'react'
 
-const ColorPicker = ({ id, updateList, c, locked }) => {
-    const [color, setColor] = React.useState(c)
+const ColorPicker = ({ updateChange, initColor }) => {
+    const [color, setColor] = React.useState(initColor)
     const [show, setShow] = React.useState(false)
 
     const popOverStyles = {
         position: 'absolute',
-        backgroundColor: 'green',
         zIndex: '2',
         top: '100%',
-        left: -55,
+        left: -14,
     }
 
     const coverStyles = {
@@ -27,21 +26,21 @@ const ColorPicker = ({ id, updateList, c, locked }) => {
 
     const handleColorChange = (col) => {
         setColor(col)
-        updateList(id, col)
+        updateChange(col)
     }
 
     return (
         <>
             <div
                 style={{
-                    backgroundColor: c.hex || c,
-                    height: 25,
-                    width: 25,
+                    backgroundColor: color.hex || color,
+                    height: 30,
+                    width: 30,
                     borderRadius: '50%',
                     marginRight: 10,
                     cursor: 'pointer',
                 }}
-                onClick={() => setShow(locked ? false : !show)}
+                onClick={() => setShow(!show)}
             ></div>
             {show && (
                 <div style={popOverStyles}>

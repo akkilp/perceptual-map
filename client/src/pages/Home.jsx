@@ -29,7 +29,7 @@ import useFetch from '../hooks/useFetch'
 
 const Home = () => {
     const { user } = useAuth()
-    const { setMessage } = useMessager()
+    const { displayMessage } = useMessager()
 
     const navigate = useNavigate()
 
@@ -55,7 +55,7 @@ const Home = () => {
     }
 
     if (error) {
-        setMessage(error)
+        displayMessage(error.message, 'error')
         return <div> Error occurred in fetching data</div>
     }
 
@@ -144,11 +144,11 @@ const Home = () => {
                     <Paper
                         sx={{ p: 2, display: 'flex', flexDirection: 'column' }}
                     >
-                        <ClickableList
+                        {/*                         <ClickableList
                             label="Answered maps"
                             items={answers}
                             emptyLabel="You have not answered to maps yet."
-                        />
+                        /> */}
                     </Paper>
                 </Grid>
             </Grid>
