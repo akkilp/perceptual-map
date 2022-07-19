@@ -32,6 +32,7 @@ export const apiCallWithPayload = async (
     try {
         const url = config.API_ADDRESS + endpoint
         const response = await method(url, data, options)
+        console.log(response)
         return response
     } catch (error) {
         if (!error.response) {
