@@ -118,8 +118,8 @@ const EditDimension = ({ handleClose, data, editing, handleUpdate }) => {
                     <FormLabel id="valueType">Value type</FormLabel>
                     <RadioGroup
                         row
-                        name="type"
-                        label="type"
+                        name="valueType"
+                        label="valueType"
                         type="valueType"
                         value={formik.values.valueType}
                         onChange={formik.handleChange}
