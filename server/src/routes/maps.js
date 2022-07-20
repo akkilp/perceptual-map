@@ -215,10 +215,9 @@ router.delete("/:mapId/:dimensionId", async (req, res) => {
   }
 });
 
-const newAnswerSchema = {
+/* const newAnswerSchema = {
   userId: {
     isInt: true,
-    exists: true,
     toInt: true,
   },
   mapId: {
@@ -240,64 +239,68 @@ const newAnswerSchema = {
     exists: true,
     toString: true,
   },
-};
+}; */
 
 // Answer to a specific map
-router.post("/:mapId", checkSchema(newAnswerSchema), async (req, res) => {
-  const { userId, dimensionId, answer, subjectId } = req.body;
+router.post(
+  "/:mapId/answer",
+  /*   checkSchema(newAnswerSchema), */
+  async (req, res) => {
+    let answers = req.body;
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}`,
-    });
-  }
+    /*     const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        error: `Inserted ${errors.errors[0].param} was invalid: ${errors.errors[0].msg}`,
+      });
+    } */
 
-  const { mapId } = req.params;
-  const mapFound = await Map.findByPk(mapId);
-  if (!mapFound) {
-    return res
-      .status(404)
-      .json({ error: `Map with id ${mapId} does not exist.` });
-  }
+    const { mapId } = req.params;
+    const mapFound = await Map.findByPk(mapId);
+    if (!mapFound) {
+      return res
+        .status(404)
+        .json({ error: `Map with id ${mapId} does not exist.` });
+    }
 
-  const dimensionFound = mapFound
-    .toJSON()
-    .dimensions.filter((dim) => dim.id === dimensionId);
+    /*     const dimensionFound = mapFound
+      .toJSON()
+      .dimensions.filter((dim) => dim.id === dimensionId);
 
-  if (!dimensionFound || dimensionFound.length <= 0) {
-    return res
-      .status(404)
-      .json({ error: `Dimension with id ${dimensionId} does not exist.` });
-  }
+    if (!dimensionFound || dimensionFound.length <= 0) {
+      return res
+        .status(404)
+        .json({ error: `Dimension with id ${dimensionId} does not exist.` });
+    }
 
-  const { valueType, minValue, maxValue } = dimensionFound[0];
-  const inputValueMatchesDimension = isValid(
-    answer,
-    valueType,
-    minValue,
-    maxValue
-  );
-  if (!inputValueMatchesDimension) {
-    return res.status(409).json({
-      error: `The answer value ${answer} does not match with dimension value ${dimensionFound.valueType}`,
-    });
-  }
-
-  try {
-    const answer_response = await Answer.create({
-      userId: userId,
-      dimensionId: dimensionId,
-      mapId: mapId,
-      answer: answer,
-      subjectId: subjectId,
+    const { valueType, minValue, maxValue } = dimensionFound[0];
+    const inputValueMatchesDimension = isValid(
+      answer,
+      valueType,
+      minValue,
+      maxValue
+    );
+    if (!inputValueMatchesDimension) {
+      return res.status(409).json({
+        error: `The answer value ${answer} does not match with dimension value ${dimensionFound.valueType}`,
+      });
+    }
+ */
+    answers = answers.map((answer) => {
+      return { ...answer, mapId: mapId };
     });
 
-    res.status(201).send({ answer_response });
-  } catch (error) {
-    return res.status(500).json({ error: "Submitting answer failed", error });
+    console.log(answers);
+
+    try {
+      const answer_response = await Answer.bulkCreate(answers);
+
+      res.status(201).send({ answer_response });
+    } catch (error) {
+      return res.status(500).json({ error: "Submitting answer failed", error });
+    }
   }
-});
+);
 
 router.post("/:mapId/subjects", async (req, res) => {
   const { name, color } = req.body;
