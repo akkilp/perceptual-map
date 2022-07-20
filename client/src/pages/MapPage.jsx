@@ -52,6 +52,7 @@ const MapPage = () => {
         )
     }
     const {
+        id,
         title,
         createdBy,
         description,
@@ -151,10 +152,20 @@ const MapPage = () => {
                             gap: 4,
                         }}
                     >
-                        <Button fullWidth size="large" variant="contained">
+                        <Button
+                            fullWidth
+                            size="large"
+                            variant="outlined"
+                            onClick={() => navigate(`/maps/${id}/answer`)}
+                        >
                             Answer
                         </Button>
-                        <Button fullWidth size="large" variant="contained">
+                        <Button
+                            fullWidth
+                            size="large"
+                            variant="contained"
+                            onClick={() => navigate(`/maps/${id}/view`)}
+                        >
                             View
                         </Button>
                     </Paper>

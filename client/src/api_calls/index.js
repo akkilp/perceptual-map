@@ -103,3 +103,12 @@ export const deleteSubject = (dimId, mapId, options) => {
         }
     )
 }
+
+export const sendAnswer = (payload, mapId, options) => {
+    return apiCallWithPayload(
+        axios.post,
+        `/api/maps/${mapId}/subjects`,
+        payload,
+        options
+    )
+}
