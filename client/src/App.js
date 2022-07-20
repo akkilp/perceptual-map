@@ -36,7 +36,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signin" element={<Signin />} />
                 <Route path="/signin/admin" element={<AdminSignin />} />
-                <Route path="*" element={<Navigate to="/404" replace />} />
+                {/*  <Route path="*" element={<Navigate to="/404" replace />} /> */}
             </Routes>
         </div>
     )
