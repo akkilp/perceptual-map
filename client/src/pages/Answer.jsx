@@ -40,9 +40,10 @@ import { sendAnswer } from '../api_calls'
 const FinishSlide = ({ keys, questions, answers, navigateTo }) => {
     const { mapId } = useParams()
     const { displayMessage } = useMessager()
+    const { user } = useAuth()
     const navigate = useNavigate()
 
-    const [handleApiSubmit, loading, response, error] = useSubmit(sendAnswer)
+    const [handleApiSubmit, loading, error, response] = useSubmit(sendAnswer)
 
     const isAnswered = Object.keys(answers).length > 0
 
@@ -61,9 +62,10 @@ const FinishSlide = ({ keys, questions, answers, navigateTo }) => {
         }
         const payload = Object.values(answers).map((answer) => {
             const answerObject = {
-                dimId: answer.dimId,
+                dimensionId: answer.dimId,
                 subjectId: answer.subjectId,
                 answer: answer.value,
+                userId: user.id ? user.id : -1,
             }
             return answerObject
         })
@@ -96,12 +98,6 @@ const FinishSlide = ({ keys, questions, answers, navigateTo }) => {
                                 <TableRow
                                     key={keys[i + 1]}
                                     hover
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0,
-                                        },
-                                        cursor: 'pointer',
-                                    }}
                                     onClick={() => navigateTo(i + 1)}
                                 >
                                     <TableCell component="th" scope="row">
@@ -118,11 +114,11 @@ const FinishSlide = ({ keys, questions, answers, navigateTo }) => {
                         })}
                     </TableBody>
                 </Table>
-                <Divider />
+
                 <Button
                     sx={{ m: 2, width: 200, float: 'right' }}
                     variant="contained"
-                    onClick={() => handleApiSubmit(prepareData(answers))}
+                    onClick={() => handleApiSubmit(prepareData(answers), mapId)}
                 >
                     Send
                 </Button>
@@ -141,7 +137,7 @@ const FirstSlide = ({ title, description, onClick }) => {
                 alignItems: 'center',
                 gap: 3,
                 textAlign: 'center',
-                mt: '15%',
+                mt: '10%',
             }}
         >
             <Typography
@@ -154,10 +150,23 @@ const FirstSlide = ({ title, description, onClick }) => {
                 how you perceive specific subjects. In this survey you are being
                 asked to give estimation of
             </Typography>
-            <Typography color="primary" variant="h4">
+            <Typography
+                sx={{
+                    maxWidth: 400,
+                }}
+                color="primary"
+                variant="h4"
+            >
                 {title}
             </Typography>
-            <Typography variant="h6">{description}</Typography>
+            <Typography
+                sx={{
+                    maxWidth: 400,
+                }}
+                variant="h6"
+            >
+                {description}
+            </Typography>
             <Typography
                 variant="h6"
                 sx={{
@@ -202,7 +211,6 @@ const QuestionItem = ({ dimension, subject, onAnswer }) => {
         e.preventDefault()
         setValue(e.target.value)
     }
-
     return (
         <Box
             sx={{
@@ -405,7 +413,11 @@ const Answer = () => {
                         initial={{ opacity: 0, y: 20 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.15 }}
-                        style={{ height: '100%', flexGrow: 1 }}
+                        style={{
+                            height: '100%',
+                            flexGrow: 1,
+                            overflow: 'scroll',
+                        }}
                     >
                         {deck[navigation]}
                     </motion.div>
