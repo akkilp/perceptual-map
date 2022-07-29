@@ -70,10 +70,10 @@ function TwoDimensionalMap({
     }
 
     return (
-        <ResponsiveContainer width="70%" height="70%" aspect={1}>
+        <ResponsiveContainer width="100%" height="100%" aspect={1}>
             <ScatterChart
                 margin={{
-                    top: 20,
+                    top: 0,
                     right: 20,
                     left: 0,
                     bottom: 20,
@@ -121,6 +121,7 @@ function TwoDimensionalMap({
                                 x: meansX.toFixed(2),
                                 y: meansY.toFixed(2),
                                 subject: group[0].subject,
+                                color: group[0].color,
                             },
                         ]
                     } else {
@@ -134,6 +135,7 @@ function TwoDimensionalMap({
                             data={data}
                             fill={group[0].color}
                             shape={showAverage ? 'circle' : 'cross'}
+                            isAnimationActive={false}
                         />
                     )
                 })}
