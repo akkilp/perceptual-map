@@ -7,13 +7,17 @@ function useFetch(callFunction) {
     useEffect(() => {
         const callApi = async () => {
             setLoading(true)
+            console.log('starting')
             try {
                 const response = await callFunction()
                 setData(response)
+                console.log('responsed')
             } catch (err) {
                 setError(err)
+                console.log('error')
             } finally {
                 setLoading(false)
+                console.log('loading set')
             }
         }
         callApi()
