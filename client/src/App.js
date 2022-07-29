@@ -12,6 +12,7 @@ import BrowseMaps from './pages/BrowseMaps'
 import ProtectedRoute from './components/ProtectedRoute'
 import CreateMap from './pages/CreateMap'
 import Answer from './pages/Answer'
+import View from './pages/View'
 
 function App() {
     return (
@@ -32,7 +33,7 @@ function App() {
                 <Route path="/maps/create" element={<CreateMap />} />
                 <Route path="/maps/:mapId" element={<MapPage />} />
                 <Route path="/maps/:mapId/answer" element={<Answer />} />
-
+                <Route path="/maps/:mapId/view" element={<View />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signin" element={<Signin />} />
                 <Route path="/signin/admin" element={<AdminSignin />} />
