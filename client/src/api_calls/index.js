@@ -8,8 +8,13 @@ export const createMap = (payload, options) =>
 
 export const fetchMap = (id) => apiCall(axios.get, `/api/maps/${id}`)
 
+export const fetchAllMaps = () => apiCall(axios.get, '/api/maps')
+
 export const fetchUserContent = (id, options) =>
     apiCall(axios.get, `/api/users/${id}`, options)
+
+export const fetchAnsweredMaps = (id, options) =>
+    apiCall(axios.get, `/api/users/${id}/answeredMaps`, options)
 
 export const login = (credentials) =>
     apiCallWithPayload(axios.post, '/api/login', credentials, {
