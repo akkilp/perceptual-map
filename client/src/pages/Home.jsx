@@ -26,6 +26,8 @@ import makeAuthHeader from '../util/makeAuthHeader'
 import useMessager from '../hooks/useMessager'
 import { useNavigate } from 'react-router-dom'
 import useFetch from '../hooks/useFetch'
+import NavigationList from '../components/NavigationList'
+import { fetchAnsweredMaps } from '../api_calls'
 
 const Home = () => {
     const { user } = useAuth()
@@ -40,7 +42,7 @@ const Home = () => {
     if (loading) {
         return (
             <Container
-                maxWidth="xl"
+                maxWidth="lg"
                 sx={{
                     mt: 20,
                     mb: 4,
@@ -59,10 +61,10 @@ const Home = () => {
         return <div> Error occurred in fetching data</div>
     }
 
-    const { admin, answers, maps, username } = data.data
+    const { admin, maps, username } = data.data
 
     return (
-        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
                 {/* Chart */}
                 <Grid item xs={12} md={8} lg={9}>
@@ -117,6 +119,7 @@ const Home = () => {
                         <Button
                             sx={{ width: 200, height: 50 }}
                             variant="contained"
+                            onClick={() => navigate('/maps')}
                         >
                             Browse
                         </Button>
@@ -144,11 +147,16 @@ const Home = () => {
                     <Paper
                         sx={{ p: 2, display: 'flex', flexDirection: 'column' }}
                     >
-                        {/*                         <ClickableList
+                        <NavigationList
+                            apiFunc={() =>
+                                fetchAnsweredMaps(
+                                    user.id,
+                                    makeAuthHeader(user.token)
+                                )
+                            }
                             label="Answered maps"
-                            items={answers}
                             emptyLabel="You have not answered to maps yet."
-                        /> */}
+                        />
                     </Paper>
                 </Grid>
             </Grid>

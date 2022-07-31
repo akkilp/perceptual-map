@@ -83,7 +83,7 @@ const MapPage = () => {
     const answerUrl = `${window.location.href}/answer`
 
     return (
-        <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Container maxWidth="lg" sx={{ my: 4, mt: 10 }}>
             <Grid container spacing={3} alignItems="stretch">
                 <Grid item xs={12}>
                     <Paper

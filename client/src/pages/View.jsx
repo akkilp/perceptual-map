@@ -14,7 +14,7 @@ import TwoDimensionalMap from '../components/TwoDimensionalMap'
 import { fetchMap } from '../api_calls'
 import useFetch from '../hooks/useFetch'
 
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Loading from '../components/Loading'
 import mergeDataFor2D from '../util/mergeDataFor2D'
@@ -46,6 +46,8 @@ const drawerWidth = 300
 const View = () => {
     let { mapId } = useParams()
     const [loading, error, data] = useFetch(() => fetchMap(mapId))
+
+    const navigate = useNavigate()
 
     const [selectedSubjects, setSelectedSubjects] = useState([])
     const [selectedDimensions, setSelectedDimensions] = useState([])
@@ -120,6 +122,7 @@ const View = () => {
                             width: drawerWidth,
                             boxSizing: 'border-box',
                         },
+                        display: 'flex',
                     }}
                     variant="permanent"
                     anchor="left"
@@ -143,6 +146,14 @@ const View = () => {
                         items={subjects}
                         handleSelect={(v) => setSelectedSubjects(v)}
                     />
+                    <Divider />
+                    <Button
+                        sx={{ m: 2, justifySelf: 'flex-end' }}
+                        variant="outlined"
+                        onClick={() => navigate(`/maps/${mapId}`)}
+                    >
+                        Back to map
+                    </Button>
                 </Drawer>
                 <VisualizationSelector
                     visualization={visualization}

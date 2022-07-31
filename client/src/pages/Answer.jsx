@@ -65,7 +65,7 @@ const FinishSlide = ({ keys, questions, answers, navigateTo }) => {
                 dimensionId: answer.dimId,
                 subjectId: answer.subjectId,
                 answer: answer.value,
-                userId: user.id ? user.id : -1,
+                userId: user ? user.id : -1,
             }
             return answerObject
         })
@@ -415,8 +415,8 @@ const Answer = () => {
                         transition={{ duration: 0.15 }}
                         style={{
                             height: '100%',
+                            width: '100%',
                             flexGrow: 1,
-                            overflow: 'scroll',
                         }}
                     >
                         {deck[navigation]}
