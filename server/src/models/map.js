@@ -48,12 +48,32 @@ Map.init(
         },
         {
           model: Answer,
-          attributes: ["user_id", "dimension_id", "answer"],
+          attributes: ["user_id", "dimension_id", "answer", "subject_id"],
         },
         {
           model: Subject,
         },
       ],
+    },
+    scopes: {
+      onlyDetails: {
+        include: [
+          {
+            model: User,
+            attributes: ["id", "username"],
+            as: "createdBy",
+          },
+        ],
+      },
+      lazy: {
+        include: [
+          {
+            model: User,
+            attributes: ["id", "username"],
+            as: "createdBy",
+          },
+        ],
+      },
     },
   }
 );
