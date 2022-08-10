@@ -2,6 +2,9 @@
 A full stack application for making perceptual maps (e.g., customer perceptions of fast food restaurant qualities).
 Each of perceptual map consists of dimensions (e.g., quality, taste), and subjects (e.g., McDonalds, Hesburger).
 
+Live at:
+https://perceptual-map.herokuapp.com/
+
 This repo consists of:
 - Relational database (PSQL)
 - Restful express server for handling api calls
